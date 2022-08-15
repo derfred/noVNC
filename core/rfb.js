@@ -485,6 +485,14 @@ export default class RFB extends EventTargetMixin {
         }
     }
 
+    copyImageData() {
+        return this._display.copyImageData()
+    }
+
+    toDataURL(format) {
+        return this._display.toDataURL(format)
+    }
+
     // ===== PRIVATE METHODS =====
 
     _connect() {

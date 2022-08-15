@@ -224,6 +224,14 @@ export default class Display {
         this.viewportChangePos(0, 0);
     }
 
+    copyImageData() {
+        return this._targetCtx.getImageData(0, 0, this.width, this.height)
+    }
+
+    toDataURL(format) {
+        return this._target.toDataURL(format)
+    }
+
     // Track what parts of the visible canvas that need updating
     _damage(x, y, w, h) {
         if (x < this._damageBounds.left) {
