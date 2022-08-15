@@ -448,12 +448,14 @@ export default class RFB extends EventTargetMixin {
 
             Log.Info("Sending key (" + (down ? "down" : "up") + "): keysym " + keysym + ", scancode " + scancode);
 
+            this.dispatchEvent(new CustomEvent("keyboard", { detail: { key: keysym, down }}))
             RFB.messages.QEMUExtendedKeyEvent(this._sock, keysym, down, scancode);
         } else {
             if (!keysym) {
                 return;
             }
             Log.Info("Sending keysym (" + (down ? "down" : "up") + "): " + keysym);
+            this.dispatchEvent(new CustomEvent("keyboard", { detail: { key: keysym, down }}))
             RFB.messages.keyEvent(this._sock, keysym, down ? 1 : 0);
         }
     }
@@ -998,6 +1000,7 @@ export default class RFB extends EventTargetMixin {
                 // Otherwise we treat this as a mouse click event.
                 // Send the button down event here, as the button up
                 // event is sent at the end of this function.
+                this.dispatchEvent(new CustomEvent("mouseclick", { detail: { pos: { x, y }, bmask }}))
                 this._sendMouse(x, y, bmask);
             }
         }
@@ -1015,6 +1018,7 @@ export default class RFB extends EventTargetMixin {
             this._mouseButtonMask &= ~bmask;
         }
 
+        this.dispatchEvent(new CustomEvent("mouseclick", { detail: { pos: { x, y }, bmask: this._mouseButtonMask }}))
         this._sendMouse(x, y, this._mouseButtonMask);
     }
 
@@ -1042,6 +1046,7 @@ export default class RFB extends EventTargetMixin {
 
             const timeSinceLastMove = Date.now() - this._mouseLastMoveTime;
             if (timeSinceLastMove > MOUSE_MOVE_DELAY) {
+                this.dispatchEvent(new CustomEvent("mousemove", this._mousePos))
                 this._sendMouse(x, y, this._mouseButtonMask);
                 this._mouseLastMoveTime = Date.now();
             } else {
@@ -1055,6 +1060,7 @@ export default class RFB extends EventTargetMixin {
 
     _handleDelayedMouseMove() {
         this._mouseMoveTimer = null;
+        this.dispatchEvent(new CustomEvent("mousemove", this._mousePos))
         this._sendMouse(this._mousePos.x, this._mousePos.y,
                         this._mouseButtonMask);
         this._mouseLastMoveTime = Date.now();
