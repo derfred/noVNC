@@ -2019,10 +2019,10 @@ export default class RFB extends EventTargetMixin {
         encs.push(encodings.pseudoEncodingDesktopName);
         encs.push(encodings.pseudoEncodingExtendedClipboard);
 
-        if (this._fbDepth == 24) {
-            encs.push(encodings.pseudoEncodingVMwareCursor);
-            encs.push(encodings.pseudoEncodingCursor);
-        }
+        // if (this._fbDepth == 24) {
+        //     encs.push(encodings.pseudoEncodingVMwareCursor);
+        //     encs.push(encodings.pseudoEncodingCursor);
+        // }
 
         RFB.messages.clientEncodings(this._sock, encs);
     }
